@@ -61,7 +61,7 @@ public:
 	Array Reverse()
 	{
 		T rev_array[s];
-		for (int i = 0, j = length - 1; i < s; i++)
+		for (size_t i = 0, j = length - 1; i < s; i++)
 		{
 			rev_array[i] = m_Data[j];
 			j--;
@@ -76,7 +76,7 @@ public:
 	{
 		Array<bool, s> cheacking_array;
 		int true_counter = 0;
-		for (int i = 0; i < length; i++)
+		for (size_t i = 0; i < length; i++)
 		{
 			if (func(m_Data[i], i))
 			{
@@ -90,7 +90,7 @@ public:
 		}
 		Array<T, s> filtered_array;
 		int j = 0;
-		for (int i = 0; i < length; i++)
+		for (size_t i = 0; i < length; i++)
 		{
 			if (cheacking_array[i])
 			{
@@ -109,7 +109,7 @@ public:
 	{
 		Array<bool, s> cheacking_array;
 		int true_counter = 0;
-		for (int i = 0; i < length; i++)
+		for (size_t i = 0; i < length; i++)
 		{
 			if (func(m_Data[i]))
 			{
@@ -123,7 +123,7 @@ public:
 		}
 		Array<T, s> filtered_array;
 		int j = 0;
-		for (int i = 0; i < length; i++)
+		for (size_t i = 0; i < length; i++)
 		{
 			if (cheacking_array[i])
 			{
@@ -140,7 +140,7 @@ public:
 		for (int j = length; j > 0; j--)
 		{
 			int total_swaps = 0;
-			for (int i = 0; i < length; i++)
+			for (size_t i = 0; i < length; i++)
 			{
 				if (i + 1 == length)break;
 				if (sort_l(m_Data[i], m_Data[i + 1]))
@@ -162,10 +162,10 @@ public:
 	Array Sort(bool(*func)(T, T))
 	{
 
-		for (int j = length; j > 0; j--)
+		for (size_t j = length; j > 0; j--)
 		{
 			int total_swaps = 0;
-			for (int i = 0; i < length; i++)
+			for (size_t i = 0; i < length; i++)
 			{
 				if (i + 1 == length)break;
 				if (!func(m_Data[i], m_Data[i + 1]))
@@ -184,7 +184,7 @@ public:
 	}
 	void PrintArray()
 	{
-		for (int i = 0; i < length; i++)
+		for (size_t i = 0; i < length; i++)
 		{
 			std::cout << m_Data[i] << std::endl;
 		}
@@ -195,13 +195,9 @@ private:
 	bool sort_l(T first_element, T second_element)
 	{
 		if (first_element > second_element)
-		{
 			return true;
-		}
-		else {
+		else 
 			return false;
-
-		}
 	}
 };
 
@@ -226,6 +222,7 @@ int main()
 
 	data.ForEach([](int Data) {
 		std::cout << "for each " << Data<< std::endl;
+
 		});
 
 
