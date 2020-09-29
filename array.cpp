@@ -1,31 +1,31 @@
 
 #include <iostream>
-template <typename T,size_t s>
+template <typename T, size_t s>
 class Array
 {
 public:
 	Array() = default;
-	int Length() {
+	int Length() const {
 		return length;
-	 }
+	}
 	T& operator[] (size_t index) {
 		if (index > length) {
 			__debugbreak();
 		}
-		return m_Data[index]; 
+		return m_Data[index];
 	}
-	T* Data() { return m_Data; }
+	T* Data() const { return m_Data; }
 
-	void ForEach(void(*func)(T,int))
+	void ForEach(void(*func)(T, int))const
 	{
 		for (size_t i = 0; i < length; i++)
 		{
-			func(m_Data[i],i);
+			func(m_Data[i], i);
 			//std::cout << m_Data[i];
 		}
-		
+
 	}
-	void ForEach(void(*func)(T))
+	void ForEach(void(*func)(T))const
 	{
 		for (size_t i = 0; i < length; i++)
 		{
@@ -35,26 +35,26 @@ public:
 
 	}
 	template <typename t>
-	Array Map(t(*func)(T, int)) {
+	Array Map(t(*func)(T, int)) const
+	{
 
-		 Array<t , s > newarray;
-		 
-		 for (size_t i = 0; i < length; i++)
-		 {
-			 newarray[i] = func(m_Data[i], i);
-			 //std::cout << m_Data[i];
-		 }
-		 return newarray;
+		Array<t, s > newarray;
+
+		for (size_t i = 0; i < length; i++)
+		{
+			newarray[i] = func(m_Data[i], i);
+		}
+		return newarray;
 	}
 	template <typename t>
-	Array Map(t(*func)(T)) {
+	Array Map(t(*func)(T)) const
+	{
 
 		Array<t, s > newarray;
 
 		for (size_t i = 0; i < length; i++)
 		{
 			newarray[i] = func(m_Data[i]);
-			//std::cout << m_Data[i];
 		}
 		return newarray;
 	}
@@ -72,24 +72,24 @@ public:
 		}
 		return *this;
 	}
-	Array Filter(bool(*func)(T,int)) 
+	Array Filter(bool(*func)(T, int))
 	{
 		Array<bool, s> cheacking_array;
-		int true_counter=0;
+		int true_counter = 0;
 		for (int i = 0; i < length; i++)
 		{
-			if (func(m_Data[i],i)) 
+			if (func(m_Data[i], i))
 			{
 				true_counter++;
 				cheacking_array[i] = true;
 			}
-			else 
+			else
 			{
 				cheacking_array[i] = false;
 			}
 		}
 		Array<T, s> filtered_array;
-		int j=0;
+		int j = 0;
 		for (int i = 0; i < length; i++)
 		{
 			if (cheacking_array[i])
@@ -131,17 +131,15 @@ public:
 				j++;
 			}
 		}
-		filtered_array[true_counter] = '\0';
-		if (filtered_array[true_counter] == 0) {
-		}
 		filtered_array.length = true_counter;
 		return filtered_array;
 	}
-	void Sort() 
+	Array Sort()
 	{
-		
+
 		for (int j = length; j > 0; j--)
 		{
+			int total_swaps = 0;
 			for (int i = 0; i < length; i++)
 			{
 				if (i + 1 == length)break;
@@ -151,32 +149,38 @@ public:
 					temp = m_Data[i];
 					m_Data[i] = m_Data[i + 1];
 					m_Data[i + 1] = temp;
+					total_swaps++;
 				}
 
 			}
+			if (!total_swaps) break;
+
 		}
-		
+		return *this;
 	}
 
-	void Sort(bool(*func)(T,T))
+	Array Sort(bool(*func)(T, T))
 	{
 
 		for (int j = length; j > 0; j--)
 		{
+			int total_swaps = 0;
 			for (int i = 0; i < length; i++)
 			{
 				if (i + 1 == length)break;
-				if (func(m_Data[i], m_Data[i + 1]))
+				if (!func(m_Data[i], m_Data[i + 1]))
 				{
 					T temp;
 					temp = m_Data[i];
 					m_Data[i] = m_Data[i + 1];
 					m_Data[i + 1] = temp;
+					total_swaps++;
 				}
-
 			}
-		}
+			if (!total_swaps) break;
 
+		}
+		return *this;
 	}
 	void PrintArray()
 	{
@@ -185,7 +189,7 @@ public:
 			std::cout << m_Data[i] << std::endl;
 		}
 	}
-private: 
+private:
 	T m_Data[s];
 	size_t length = s;
 	bool sort_l(T first_element, T second_element)
@@ -201,14 +205,8 @@ private:
 	}
 };
 
-int triple(int D,int index) {
-	
-	return D*3;
-}
 
-
-
-struct xydata
+struct vector2D
 {
 	int x;
 	int y;
@@ -218,47 +216,67 @@ struct xydata
 int main()
 {
 	Array <int, 5> data;
-	/*memset(data.Data(),0, data.length * sizeof(int));*/
+	
 	data[0] = 60;
 	data[1] = 70;
 	data[2] = 10;
 	data[3] = 40;
 	data[4] = 50;
-	
+
 
 	data.ForEach([](int Data) {
-		std::cout << "for each "<< std::endl;
+		std::cout << "for each " << Data<< std::endl;
 		});
+
+
 	data.Reverse();
 	std::cout << "reversed\n";
 	data.PrintArray();
 
-	auto filteredArray = data.Filter( [](int D, int index) ->bool {
+	auto filteredArray = data.Filter([](int D, int index) ->bool {
 		return D > 40;
-	});
+		});
 	std::cout << "filter greater than 40\n";
 
 	filteredArray.PrintArray();
 
-	
+
 	//std::cout << filteredArray.Length();
 	std::cout << "sort\n";
 
 	data.Sort();
 	data.PrintArray();
-	data.Map<int>( [](int D, int index)->int {
-	 return D * 3;
-	}).Reverse() // <----- here
-	.ForEach([](int Data, int index) {
-		std::cout  << "chaining  " << Data << std::endl;
-		});
+	data.Sort();
 
- //data.Reverse().ForEach([](int Data, int index) {
-	// std::cout << index << ". " << Data << std::endl;
-	// });
- //
- 
+	data.Map<int>([](int D, int index)->int {
+		return D * 3;
+		}).Reverse() // <----- here
+			.ForEach([](int Data, int index) {
+			std::cout << "chaining  " << Data << std::endl;
+				});
+
+		//data.Reverse().ForEach([](int Data, int index) {
+		   // std::cout << index << ". " << Data << std::endl;
+		   // });
+		//
+		std::cout << "\n sorting in class or struct\n";
+
+		Array<vector2D, 5> vector2D_array;
+
+		vector2D_array[0].x = 60;
+		vector2D_array[1].x = 70;
+		vector2D_array[2].x = 10;
+		vector2D_array[3].x = 40;
+		vector2D_array[4].x = 50;
+
+		vector2D_array.Sort([](vector2D e1, vector2D e2)->bool
+			{
+				if (e2.x > e1.x) return true;
+				else return false;
+			}).ForEach([](vector2D data)
+				{
+					std::cout << data.x<<std::endl;
+				});
 }
 
 
-	
